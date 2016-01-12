@@ -27,6 +27,7 @@ public:
 	void deleteHead();
 	void deleteTail();
 	void deleteIndex(unsigned index);
+	void deleteData(T item);
 	void removeAll();
 	Node<T> *search(T item);
 	Node<T> *searchIndex(unsigned index);
@@ -170,6 +171,30 @@ void List<T>::deleteIndex(unsigned index)
 }
 
 template<typename T>
+void List<T>::deleteData(T item)
+{
+	Node<T> *deleteNode = head->next;
+
+	while (deleteNode != tail)
+	{
+		if (deleteNode->data == item)
+		{
+			deleteNode->next->prev = deleteNode->prev;
+			deleteNode->prev->next = deleteNode->next;
+
+			delete deleteNode;
+			size--;
+
+			return;
+		}
+
+		deleteNode = deleteNode->next;
+	}
+
+	std::cout << "This list have not " << item << std::endl;
+}
+
+template<typename T>
 void List<T>::removeAll()
 {
 	Node<T> *deleteNode = head->next;
@@ -305,7 +330,9 @@ int main()
 
 	list.insertIndex(3, 99);
 
-	list.deleteIndex(1000);
+	list.deleteData(99);
+
+	//list.deleteIndex(1000);
 
 	//list.sort();
 
