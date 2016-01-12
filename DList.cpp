@@ -15,19 +15,21 @@ class List
 private:
 	Node<T> *head;
 	Node<T> *tail;
-	int size;
+	unsigned size;
 	void exchange(Node<T> *first, Node<T> *second);
-	
+
 public:
 	List();
 	~List();
 	void insertHead(T item);
 	void insertTail(T item);
+	void insertIndex(unsigned index, T item);
 	void deleteHead();
 	void deleteTail();
+	void deleteIndex(unsigned index);
 	void removeAll();
 	Node<T> *search(T item);
-	Node<T> *searchIndex(int index);
+	Node<T> *searchIndex(unsigned index);
 	void sort();
 	void show();
 	bool isEmpty() { return size == 0; }
@@ -67,7 +69,7 @@ void List<T>::insertHead(T item)
 
 	newNode->next = head->next;
 	newNode->prev = head;
-	
+
 	head->next->prev = newNode;
 	head->next = newNode;
 
@@ -88,6 +90,33 @@ void List<T>::insertTail(T item)
 	tail->prev = newNode;
 
 	size++;
+}
+
+template<typename T>
+void List<T>::insertIndex(unsigned index, T item)
+{
+	if (index > size)
+	{
+		std::cout << "Index is wrong" << std::endl;
+	}
+
+	Node<T> *indexNode = head;
+
+	for (int i = 0; i < index - 1; i++)
+		indexNode = indexNode->next;
+
+	Node<T> *newNode = new Node<T>();
+
+	newNode->data = item;
+
+	newNode->next = indexNode->next;
+	newNode->prev = indexNode;
+
+	indexNode->next->prev = newNode;
+	indexNode->next = newNode;
+
+	size++;
+
 }
 
 template<typename T>
@@ -123,6 +152,24 @@ void List<T>::deleteTail()
 }
 
 template<typename T>
+void List<T>::deleteIndex(unsigned index)
+{
+	Node<T> *deleteNode = searchIndex(index);
+
+	if (deleteNode == nullptr)
+	{
+		std::cout << "Index is wrong" << std::endl;
+		return;
+	}
+
+	deleteNode->next->prev = deleteNode->prev;
+	deleteNode->prev->next = deleteNode->next;
+
+	delete deleteNode;
+	size--;
+}
+
+template<typename T>
 void List<T>::removeAll()
 {
 	Node<T> *deleteNode = head->next;
@@ -147,7 +194,7 @@ Node<T> *List<T>::search(T item)
 {
 	Node<T> *searcher = head->next;
 
-	while (searcher!=tail)
+	while (searcher != tail)
 	{
 		if (searcher->data == item;)
 			return searcher;
@@ -159,7 +206,7 @@ Node<T> *List<T>::search(T item)
 }
 
 template <typename T>
-Node<T> *List<T>::searchIndex(int index)
+Node<T> *List<T>::searchIndex(unsigned index)
 {
 	if (index > size)
 		return nullptr;
@@ -178,11 +225,11 @@ void List<T>::sort()
 	Node<T> *first;
 	Node<T> *second;
 
-	for (int i = 1; i <= size-1; i++)
+	for (int i = 1; i <= size - 1; i++)
 	{
 		first = searchIndex(i);
 
-		for (int j = i+1; j <= size; j++)
+		for (int j = i + 1; j <= size; j++)
 		{
 			second = searchIndex(j);
 
@@ -199,7 +246,7 @@ void List<T>::sort()
 template<typename T>
 void List<T>::exchange(Node<T> *first, Node<T> *second)
 {
-	Node<T> *temp=nullptr;
+	Node<T> *temp = nullptr;
 
 	if (first->next == second)
 	{
@@ -256,7 +303,11 @@ int main()
 	list.insertTail(4);
 	list.insertHead(9);
 
-	list.sort();
+	list.insertIndex(3, 99);
+
+	list.deleteIndex(1000);
+
+	//list.sort();
 
 	list.show();
 
