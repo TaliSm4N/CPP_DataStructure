@@ -179,6 +179,7 @@ void postfix(char *infix)
 				{
 						std::cout<<' ';
 
+						/*
 						if(check)
 						{
 								while(!op.isEmpty())
@@ -193,6 +194,25 @@ void postfix(char *infix)
 												break;
 								}
 						}
+						*/
+
+						while(!op.isEmpty())
+						{
+								if(op.peek()=='(')
+										break;
+								else if(op.peek()=='+'||op.peek()=='-')
+								{
+										std::cout<<op.peek()<<' ';
+										op.pop();
+								}
+								else if(op.peek()=='*'||op.peek()=='/')
+								{
+										std::cout<<op.peek()<<' ';
+										op.pop();
+										break;
+								}
+						}
+
 
 						op.push(infix[i]);
 
